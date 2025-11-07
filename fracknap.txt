@@ -1,0 +1,53 @@
+# A3: Write a program to solve a Fractional Knapsack problem using a Greedy Method.
+#step 1:create a class item to store value weight and ratio
+class Item:
+    def __init__(self, value, weight):
+        self.value = value
+        self.weight = weight
+        self.ratio = value / weight
+
+
+def fractional_knapsack(capacity, items):
+    # step 2: Sort items by value/weight ratio in descending order
+    items.sort(key=lambda item: item.ratio, reverse=True)  #greedy approach used  always choose the item with the highest value/weight ratio first
+    total_value = 0.0
+
+ # Step 3: Pick items one by one
+    for item in items:
+        if capacity == 0:
+            break
+        if item.weight <= capacity:
+            total_value += item.value
+            capacity -= item.weight
+        else:
+            total_value += item.value * (capacity / item.weight)
+            capacity = 0  # The knapsack is full
+    return total_value
+
+
+if __name__ == "__main__":
+    n = int(input("Enter number of items: "))
+    items = []
+
+    for i in range(n):
+        value = float(input(f"Enter value of item {i + 1}: "))
+        weight = float(input(f"Enter weight of item {i + 1}: "))
+        items.append(Item(value, weight))
+
+    capacity = float(input("Enter knapsack capacity: "))
+
+    result = fractional_knapsack(capacity, items)
+    print(f"\nMaximum value in Knapsack = {result:.2f}")
+
+# Time Complexity: O(n Log n) due to sorting
+# Space Complexity: O(1)
+# ex ITEM VALUE WEIGHT VALUE/WEIGHT
+#      1  30   80     0.375
+#      2   20   40     0.5
+#      3    10   60     0.1667
+# For Capacity=100
+#for 2 take full weight=40 value=20 100-40=60
+# for 1 take 60/80=0.75 value=30*0.75=22.5
+# Total value=20+22.5=42.5
+
+# real life problems used in cargo loading and transportation and resource allocation in cloud computing

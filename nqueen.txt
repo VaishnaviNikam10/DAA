@@ -1,0 +1,63 @@
+#A5 Design n-queens matrix having first queen placed. use backtracking to place remaining queens to generate the final n-queen matrix
+
+# BEGINNING OF CODE
+def placeQueens(i, cols, leftDiagonal, rightDiagonal, cur):
+    n = len(cols)  # Total number of queens/size of chessboard
+
+    if i == n:       # Base case: all queens placed successfully
+        return True
+    
+# Try placing a queen in each column of current row
+    for j in range(n):
+        # Check if placing a queen here causes any conflict
+        if cols[j] or rightDiagonal[i + j] or leftDiagonal[i - j + n - 1]:
+            continue
+
+  # Mark this column and diagonals as occupied
+        cols[j] = 1 
+        rightDiagonal[i + j] = 1
+        leftDiagonal[i - j + n - 1] = 1
+        cur.append(j)    # Store the column position of queen in current row
+
+# Recursive call to place queen in next row
+        if placeQueens(i + 1, cols, leftDiagonal, rightDiagonal, cur):
+            return True
+
+# Backtrack if placing queen here doesn't lead to a solution
+        cur.pop()
+        cols[j] = 0
+        rightDiagonal[i + j] = 0
+        leftDiagonal[i - j + n - 1] = 0
+
+    return False     # No valid position found in this row
+
+# Function to initialize board and start the N-Queen placement
+def nQueen(n):
+    cols = [0] * n                        # Marks used columns
+    leftDiagonal = [0] * (n * 2)        # Marks used left diagonals (\)
+    rightDiagonal = [0] * (n * 2)        # Marks used right diagonals (/)
+    cur = []                             # Stores column positions of queens row-wise
+    board = [['.' for _ in range(n)] for _ in range(n)]  # Empty chessboard
+
+    # Start placing queens from row 0
+    if placeQueens(0, cols, leftDiagonal, rightDiagonal, cur):
+         # Fill board with queens as per positions found
+        for i in range(n):
+            board[i][cur[i]] = 'Q'
+        return board
+    else:
+        return None
+
+# Function to display the chessboard
+def printBoard(board):
+    if board:
+        for row in board:
+            print(" ".join(row))  # Print each row
+    else:
+        print("No solution exists.")   # If no arrangement possible
+
+# Take input and solve the problem
+n = int(input("Enter the number of queens:\t"))
+board = nQueen(n)                        # Solve N-Queen problem
+printBoard(board)
+# END OF CODE
